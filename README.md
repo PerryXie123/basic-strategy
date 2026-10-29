@@ -1,39 +1,34 @@
 # Blackjack Lab
 
-A responsive basic strategy decision trainer. No runtime dependencies, paid APIs, accounts, or database required.
+A minimal blackjack basic strategy trainer. Two tabs: Practice and Hints. No statistics, scores, streaks, or session dashboards.
 
 ## Run locally
 
-Requires Node.js 20 or later.
+Requires Node.js 20 or later. No dependency installation is needed.
 
 ```sh
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. Run `npm test` to verify the strategy engine and `npm run build` to produce the deployable `dist/` folder.
+Open http://127.0.0.1:5173. Run `npm test` to verify the strategy engine and `npm run build` to generate the deployable `dist/` folder.
 
-## Included
+## Features
 
-- 4, 6, and 8 deck American blackjack; H17/S17, DAS, and late surrender settings.
-- Animated cards, immediate feedback, contextual explanations, hints, and interactive strategy charts.
-- Hard, soft, pair, and mistake drills. 20/50 hand or unlimited sessions.
-- Session summaries, accuracy by category, best streak, average decision time, and CSV export.
-- Optional audio and auto-advance, keyboard shortcuts, reduced-motion support, and mobile layouts.
-- Rules, preferences, and the latest 1,000 attempts saved on the current browser/device.
-- Hints and chart visits mark the active hand as assisted; assisted attempts are excluded from accuracy and streaks.
+- A focused practice table with animated cards, immediate feedback, and explanations.
+- Settings for 4/6/8 decks, H17/S17, double after split, and late surrender.
+- Interactive, printable hints charts that update with the selected rules.
+- Hard, soft, pair, or mixed practice; optional audio and auto-advance.
+- Keyboard shortcuts, mobile layouts, and reduced-motion support.
+- Only rules and preferences are saved. The app does not collect new hand history or calculate statistics. Previous v1 preferences are recognized; old statistics are not migrated or displayed.
 
 ## Strategy scope
 
-The pure engine in `src/strategy.js` implements initial two-card, total-dependent strategy for 4–8 deck **American peek** blackjack with doubling on any initial two cards. The same chart applies to all supported deck counts. It uses [Wizard of Odds’ multi-deck reference](https://wizardofodds.com/games/blackjack/strategy/4-decks/), including the H17 surrender and doubling exceptions.
+The pure engine in `src/strategy.js` implements initial two-card, total-dependent strategy for 4–8 deck **American peek** blackjack, with doubling on any initial two cards. The same chart applies to all supported deck counts. The reference is [Wizard of Odds](https://wizardofodds.com/games/blackjack/strategy/4-decks/), including H17 surrender and doubling exceptions.
 
-Scenarios are balanced for training, not drawn from a continuous shoe. This is a first-decision quiz; cards are not played out. Single/double deck, composition-dependent exceptions, European no-hole-card rules, re-splitting decisions, counting deviations, and side bets are not implemented. Strategy rules should be independently reviewed before adding a new rule family.
+Scenarios are balanced for practice rather than drawn from a continuing shoe. This is a first-decision quiz; cards are not played out. Single/double deck, composition exceptions, European no-hole-card rules, re-splitting, counting deviations, and side bets are outside the current chart.
 
-## Growing the application
+## Extending and hosting
 
-The current app can be hosted as static files on a CDN; each visitor’s quiz runs locally and no backend scales with traffic. `src/strategy.js` is independent of the UI, `src/storage.js` isolates browser persistence, and `src/app.js` composes the experience.
+The application is static and can run on a CDN without a backend. `src/strategy.js` is independent of the UI, and `src/storage.js` isolates preference persistence. New rule families should use independently verified strategy providers. Authentication or cross-device settings can be added through a storage adapter.
 
-To add accounts and cross-device progress, replace the storage adapter with an authenticated API and persist the existing attempt schema. Keep strategy decisions on the server as well if adding ranked challenges. Add new deck/rule families as separate verified strategy providers rather than silently reusing the current chart. The versioned local storage key supports future migrations. Limit history or paginate server queries as data grows. No synchronization or authentication is implied by the current local storage.
-
-## Hosting
-
-`.openai/hosting.json` records the private Sites deployment identity. Only `dist/` is published. Source is kept separately from the build artifact.
+`.openai/hosting.json` retains the existing private Sites identity. Only `dist/` is published; source is managed separately from the deployment artifact.
